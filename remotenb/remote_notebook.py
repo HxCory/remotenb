@@ -25,11 +25,9 @@ echo $HOSTNAME > $HOME/.notebooks/node.$PBS_JOBNAME.$PBS_JOBID
 mkdir -p {{directory}}
 cd {{directory}}
 
-module purge
-module load epel openmpi-gcc python
-#module load anaconda-2.0
+{{bash}}
 
-ipython notebook --port={{remote_port}} --ip='*' --no-browser
+ipython notebook --port={{remote_port}} --ip='*' --no-browser --profile={{profile}}
 
 ''')
 
@@ -56,7 +54,8 @@ class RemoteNotebook:
 		self.args['pwd'] = kwargs.get('pwd', True)
 		self.args['remote_port'] = random.randint(9000,60000)
 		self.args['cores'] = 12
-
+		self.args['bash'] = kwargs.get('bash', "module purge\nmodule load epel openmpi-gcc python\n")
+		self.args['profile'] = kwargs.get('profile', 'default')
 
 	def __str__(self):
 		tmp = 'RemoteNotebook\n'
